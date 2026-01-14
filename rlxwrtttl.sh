@@ -84,7 +84,7 @@ cat <<'EOL' > "$PAGE_HTM"
 
 <div class="rlx-card">
     <h2 style="color:#1e293b; margin-bottom:5px;">RLX-WRT Engine</h2>
-    <p style="color:#64748b;">Advanced TTL Manipulation for OpenWrt</p>
+    <p style="color:#64748b;">Fix TTL Bypass Hotspot Detection</p>
 
     <% if active_ttl then %>
         <div class="status-box status-on">
@@ -119,4 +119,5 @@ rm -rf /tmp/luci-indexcache /tmp/luci-modulecache/*
 /etc/init.d/uhttpd restart
 sync
 
-echo "RLX-WRT Pro Edition Berhasil Terpasang!"
+echo "FIX TTL Berhasil Terpasang!"
+
