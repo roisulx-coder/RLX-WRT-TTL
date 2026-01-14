@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # =========================================================
-# RLX-WRT Fix TTL Installer
+# RLX-WRT Fix TTL Installer - Full Edition
 # =========================================================
 
 # Jalur file utama
@@ -9,18 +9,21 @@ TTL_FILE="/etc/nftables.d/ttl65.nft"
 RLXWRT_LUA="/usr/lib/lua/luci/controller/rlxwrt.lua"
 PAGE_HTM="/usr/lib/lua/luci/view/rlxwrt/page.htm"
 
+echo "Memulai proses instalasi RLX-WRT..."
+
 # 1. Bersihkan sisa instalasi lama (agar tidak bentrok)
 rm -rf /usr/lib/lua/luci/controller/rlxwrt* 2>/dev/null
 rm -rf /usr/lib/lua/luci/view/rlxwrt/ 2>/dev/null
 rm -rf /usr/lib/lua/luci/controller/indowrt* 2>/dev/null
 rm -rf /usr/lib/lua/luci/view/indowrt/ 2>/dev/null
 
-# 2. Buat direktori yang diperlukan
+# 2. Buat direktori yang diperlukan secara paksa
 mkdir -p /etc/nftables.d
 mkdir -p /usr/lib/lua/luci/controller
 mkdir -p /usr/lib/lua/luci/view/rlxwrt
 
 # 3. Membuat file rlxwrt.lua (Controller)
+# Menggunakan 'EOL' untuk mencegah variabel Lua diproses oleh shell Linux
 cat <<'EOL' > "$RLXWRT_LUA"
 module("luci.controller.rlxwrt", package.seeall)
 
@@ -46,11 +49,11 @@ function render_page()
     if action == "enable" then
         local ttl_rule = [[
 ## Fix TTL RLXWRT
-chain rlxwrt_postrouting {
+chain rlxwrt_post {
     type filter hook postrouting priority 300; policy accept;
     counter ip ttl set 65
 }
-chain rlxwrt_prerouting {
+chain rlxwrt_pre {
     type filter hook prerouting priority 300; policy accept;
     counter ip ttl set 65
 }
@@ -123,17 +126,22 @@ cat <<'EOL' > "$PAGE_HTM"
 <%+footer%>
 EOL
 
-# 5. Atur Izin File
+# 5. Atur Izin File agar bisa dibaca LuCI
 chmod 644 "$RLXWRT_LUA"
 chmod 644 "$PAGE_HTM"
-[ -f "$TTL_FILE" ] && chmod 644 "$TTL_FILE"
 
-# 6. Restart Layanan
+# 6. Paksa hapus cache index LuCI (Sangat Penting agar controller muncul)
+rm -rf /tmp/luci-indexcache /tmp/luci-modulecache/*
+
+# 7. Restart Layanan
 /etc/init.d/uhttpd restart
 /etc/init.d/firewall restart
 
+# Sinkronisasi ke disk penyimpanan
+sync
+
 echo "----------------------------------------------------"
 echo "  SUKSES: RLX-WRT Fix TTL telah terpasang!"
-echo "  Silakan refresh LuCI dan cek menu:"
-echo "  Network -> Fix TTL 65"
+echo "  Silakan REFRESH browser Anda (F5)."
+echo "  Cek di menu: Network -> Fix TTL 65"
 echo "----------------------------------------------------"
