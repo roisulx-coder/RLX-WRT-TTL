@@ -125,6 +125,6 @@ rm -rf /tmp/luci-indexcache /tmp/luci-modulecache/*
 sync
 
 echo "----------------------------------------------------"
-echo "  UPDATE SUKSES: Masalah Disable telah diperbaiki!"
-echo "  Sekarang tombol Disable akan menghapus file TTL."
+echo "  UPDATE SUKSES!"
+echo "  hapus file TTL."
 echo "----------------------------------------------------"
