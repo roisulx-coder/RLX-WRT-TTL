@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # =========================================================
-# RLX-WRT Fix TTL Installer - Fix Disable Issue
+# RLX-WRT TTL Installer
 # =========================================================
 
 # Jalur file utama
@@ -16,7 +16,6 @@ mkdir -p /usr/lib/lua/luci/controller
 mkdir -p /usr/lib/lua/luci/view/rlxwrt
 
 # 2. Membuat file rlxwrt.lua (Controller)
-# Perbaikan pada fungsi disable agar menghapus semua file terkait TTL
 cat <<'EOL' > "$RLXWRT_LUA"
 module("luci.controller.rlxwrt", package.seeall)
 
@@ -88,23 +87,23 @@ cat <<'EOL' > "$PAGE_HTM"
 
 <div class="rlx-container">
     <div class="rlx-card">
-        <div class="rlx-title">RLX-WRT Engine</div>
+        <div class="rlx-title">RLX-WRT | Fix TTK</div>
         <p>Fix TTL Bypass Hotspot Detection</p>
         
         <% if is_active then %>
-            <div class="status-badge status-on">● SERVICE ACTIVE</div>
+            <div class="status-badge status-on">● TTL TERPASANG</div>
         <% else %>
-            <div class="status-badge status-off">● SERVICE INACTIVE</div>
+            <div class="status-badge status-off">● TTL MATI</div>
         <% end %>
 
         <div class="btn-wrap">
             <form method="post" action="<%=request_uri%>" style="display:inline;">
                 <input type="hidden" name="action" value="enable" />
-                <button type="submit" class="btn-rlx btn-enable">ENABLE NOW</button>
+                <button type="submit" class="btn-rlx btn-enable">PASANG TTL</button>
             </form>
             <form method="post" action="<%=request_uri%>" style="display:inline;">
                 <input type="hidden" name="action" value="disable" />
-                <button type="submit" class="btn-rlx btn-disable">DISABLE</button>
+                <button type="submit" class="btn-rlx btn-disable">HAPUS TTL</button>
             </form>
         </div>
         <div class="footer-note">Powered by roisulx-coder</div>
@@ -125,6 +124,7 @@ rm -rf /tmp/luci-indexcache /tmp/luci-modulecache/*
 sync
 
 echo "----------------------------------------------------"
-echo "  UPDATE SUKSES!"
-echo "  hapus file TTL."
+echo "  SUKSES TERPASANG!"
+echo "  POWERED BY RLXWRT"
 echo "----------------------------------------------------"
+
